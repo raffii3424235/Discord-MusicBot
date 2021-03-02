@@ -4,14 +4,14 @@ const sendError = require("../util/error")
 module.exports = {
   info: {
     name: "nowplaying",
-    description: "To show the music which is currently playing in this server",
+    description: "Untuk Melihat Musik Yang Sedang Di Putar",
     usage: "",
     aliases: ["np"],
   },
 
   run: async function (client, message, args) {
     const serverQueue = message.client.queue.get(message.guild.id);
-    if (!serverQueue) return sendError("There is nothing playing in this server.", message.channel);
+    if (!serverQueue) return sendError("Tidak ada yang di putar di channel ini.", message.channel);
     let song = serverQueue.songs[0]
     let thing = new MessageEmbed()
       .setAuthor("Now Playing", "https://raw.githubusercontent.com/SudhanPlayz/Discord-MusicBot/master/assets/Music.gif")
