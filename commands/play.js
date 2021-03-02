@@ -8,21 +8,21 @@ const sendError = require("../util/error");
 module.exports = {
     info: {
         name: "play",
-        description: "To play songs :D",
-        usage: "<YouTube_URL> | <song_name>",
+        description: "Memainkan Musik",
+        usage: "<linkYouTube> | <NamaMusik>",
         aliases: ["p"],
     },
 
     run: async function (client, message, args) {
         let channel = message.member.voice.channel;
-        if (!channel) return sendError("I'm sorry but you need to be in a voice channel to play music!", message.channel);
+        if (!channel) return sendError("Maaf,Butuh masuk ke voice channel terlebih dahulu untuk memainkan musik!", message.channel);
 
         const permissions = channel.permissionsFor(message.client.user);
-        if (!permissions.has("CONNECT")) return sendError("I cannot connect to your voice channel, make sure I have the proper permissions!", message.channel);
-        if (!permissions.has("SPEAK")) return sendError("I cannot speak in this voice channel, make sure I have the proper permissions!", message.channel);
+        if (!permissions.has("CONNECT")) return sendError("Saya tidak dapat terhubung ke voice channel, pastikan saya memiliki izin!", message.channel);
+        if (!permissions.has("SPEAK")) return sendError("Saya tidak dapat terhubung ke voice channel, pastikan saya memiliki izin!", message.channel);
 
         var searchString = args.join(" ");
-        if (!searchString) return sendError("You didn't poivide want i want to play", message.channel);
+        if (!searchString) return sendError("Anda tidak memberikan saya untuk memutar musik", message.channel);
         const url = args[0] ? args[0].replace(/<(.+)>/g, "$1") : "";
         var serverQueue = message.client.queue.get(message.guild.id);
 
@@ -31,7 +31,7 @@ module.exports = {
         if (url.match(/^(https?:\/\/)?(www\.)?(m\.)?(youtube\.com|youtu\.?be)\/.+$/gi)) {
             try {
                 songInfo = await ytdl.getInfo(url);
-                if (!songInfo) return sendError("Looks like i was unable to find the song on YouTube", message.channel);
+                if (!songInfo) return sendError("Sepertinya saya tidak bisa menemukan lagu tersebut di YouTube:(", message.channel);
                 song = {
                     id: songInfo.videoDetails.videoId,
                     title: songInfo.videoDetails.title,
@@ -49,7 +49,7 @@ module.exports = {
         } else {
             try {
                 var searched = await yts.search(searchString);
-                if (searched.videos.length === 0) return sendError("Looks like i was unable to find the song on YouTube", message.channel);
+                if (searched.videos.length === 0) return sendError("Sepertinya saya tidak bisa menemukan lagu tersebut di YouTube:(", message.channel);
 
                 songInfo = searched.videos[0];
                 song = {
@@ -71,7 +71,7 @@ module.exports = {
         if (serverQueue) {
             serverQueue.songs.push(song);
             let thing = new MessageEmbed()
-                .setAuthor("Song has been added to queue", "https://raw.githubusercontent.com/SudhanPlayz/Discord-MusicBot/master/assets/Music.gif")
+                .setAuthor("Lagu telah di tambahkan ke antrian", "https://raw.githubusercontent.com/SudhanPlayz/Discord-MusicBot/master/assets/Music.gif")
                 .setThumbnail(song.img)
                 .setColor("YELLOW")
                 .addField("Name", song.title, true)
@@ -86,7 +86,7 @@ module.exports = {
             voiceChannel: channel,
             connection: null,
             songs: [],
-            volume: 80,
+            volume: 85,
             playing: true,
             loop: false,
         };
@@ -97,10 +97,9 @@ module.exports = {
             const queue = message.client.queue.get(message.guild.id);
             if (!song) {
                 sendError(
-                    "Leaving the voice channel because I think there are no songs in the queue. If you like the bot stay 24/7 in voice channel go to `commands/play.js` and remove the line number 61\n\nThank you for using my code! [GitHub](https://github.com/SudhanPlayz/Discord-MusicBot)",
+                    "Keluar dari voice channel karena sudah tidak ada antrian.",
                     message.channel
                 );
-                message.guild.me.voice.channel.leave(); //If you want your bot stay in vc 24/7 remove this line :D
                 message.client.queue.delete(message.guild.id);
                 return;
             }
@@ -112,7 +111,7 @@ module.exports = {
                         if (queue) {
                             queue.songs.shift();
                             play(queue.songs[0]);
-                            return sendError(`An unexpected error has occurred.\nPossible type \`${er}\``, message.channel);
+                            return sendError(`kesalahan tak terduga muncul.\nPossible type \`${er}\``, message.channel);
                         }
                     }
                 });
@@ -129,7 +128,7 @@ module.exports = {
 
             dispatcher.setVolumeLogarithmic(queue.volume / 100);
             let thing = new MessageEmbed()
-                .setAuthor("Started Playing Music!", "https://raw.githubusercontent.com/SudhanPlayz/Discord-MusicBot/master/assets/Music.gif")
+                .setAuthor("Mulai Memutar Musik!", "https://raw.githubusercontent.com/SudhanPlayz/Discord-MusicBot/master/assets/Music.gif")
                 .setThumbnail(song.img)
                 .setColor("BLUE")
                 .addField("Name", song.title, true)
@@ -144,10 +143,10 @@ module.exports = {
             queueConstruct.connection = connection;
             play(queueConstruct.songs[0]);
         } catch (error) {
-            console.error(`I could not join the voice channel: ${error}`);
+            console.error(`Saya tidak bisa bergabung voice channel: ${error}`);
             message.client.queue.delete(message.guild.id);
             await channel.leave();
-            return sendError(`I could not join the voice channel: ${error}`, message.channel);
+            return sendError(`Saya tidak bisa bergabung voice channel: ${error}`, message.channel);
         }
     },
 };
