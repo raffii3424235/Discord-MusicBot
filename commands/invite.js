@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
   info: {
     name: "invite",
-    description: "To add/invite the bot to your server",
+    description: "Mengundang Bot ke Server Anda",
     usage: "[invite]",
     aliases: ["inv"],
   },
@@ -15,9 +15,9 @@ module.exports = {
     
     let invite = new MessageEmbed()
     .setTitle(`Invite ${client.user.username}`)
-    .setDescription(`Want me in your server? Invite me today! \n\n [Invite Link](https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=${permissions}&scope=bot)`)
+    .setDescription(`Mau ada saya di server? Invite me! \n\n [Invite Link](https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=${permissions}&scope=bot)`)
     .setURL(`https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=${permissions}&scope=bot`)
-    .setColor("BLUE")
+    .setColor("RED")
     return message.channel.send(invite);
   },
 };
