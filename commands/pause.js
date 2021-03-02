@@ -4,7 +4,7 @@ const sendError = require("../util/error");
 module.exports = {
   info: {
     name: "pause",
-    description: "To pause the current music in the server",
+    description: "Menghentikan Lagu Yang Sedang Di Putar",
     usage: "[pause]",
     aliases: ["pause"],
   },
@@ -17,14 +17,14 @@ module.exports = {
       serverQueue.connection.dispatcher.pause()
 	  } catch (error) {
         message.client.queue.delete(message.guild.id);
-        return sendError(`:notes: The player has stopped and the queue has been cleared.: ${error}`, message.channel);
+        return sendError(`:note: Lagu telah di hentikan dan antrian telah di hapus.: ${error}`, message.channel);
       }	    
       let xd = new MessageEmbed()
-      .setDescription("⏸ Paused the music for you!")
+      .setDescription("⏸ Paused the music!")
       .setColor("YELLOW")
       .setTitle("Music has been paused!")
       return message.channel.send(xd);
     }
-    return sendError("There is nothing playing in this server.", message.channel);
+    return sendError("Tidak ada musik yang di putar.", message.channel);
   },
 };
